@@ -1,0 +1,86 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #241C15;
+    background-color: #FAF8F5;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, .font-serif {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+  }
+}
+
+/* Custom Utilities for Leafology Palette - Aligned with Leaf Green (#2B522F / #244226) */
+.bg-leaf-dark {
+  background-color: #1A331E;
+}
+
+.bg-leaf-header {
+  background-color: #244226;
+}
+
+.bg-leaf-green {
+  background-color: #2D5233;
+}
+
+.bg-leaf-medium {
+  background-color: #38633F;
+}
+
+.bg-leaf-sage {
+  background-color: #8CAE92;
+}
+
+.bg-leaf-soft {
+  background-color: #E8F0EA;
+}
+
+.bg-leaf-cream {
+  background-color: #FAF8F5;
+}
+
+.bg-leaf-soft-cream {
+  background-color: #F1ECE2;
+}
+
+.text-leaf-dark {
+  color: #1A331E;
+}
+
+.text-leaf-green {
+  color: #2D5233;
+}
+
+.text-leaf-medium {
+  color: #38633F;
+}
+
+.text-leaf-sage {
+  color: #8CAE92;
+}
+
+.border-leaf-green {
+  border-color: #2D5233;
+}
+
+.border-leaf-sage {
+  border-color: #8CAE92;
+}
+
+.border-leaf-soft {
+  border-color: #E2EADF;
+}
+
+/* Hide scrollbar for clean horizontal carousels */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

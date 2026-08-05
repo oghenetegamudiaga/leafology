@@ -1,0 +1,6 @@
+{
+  "name": "Leafology",
+  "description": "Handcrafted plant-based skincare, haircare, and home remedies from Oxfordshire, UK.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
