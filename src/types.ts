@@ -12,6 +12,7 @@ export interface Variant {
 
 export interface Product {
   id: string;
+  slug: string;
   name: string;
   subtitle: string;
   category: Category;

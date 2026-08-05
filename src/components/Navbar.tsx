@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Search, ShoppingBag, Heart, Sparkles, User, Leaf } from 'lucide-react';
+import { Search, ShoppingBag, Sparkles, User, Leaf } from 'lucide-react';
 import { Category } from '../types';
 
 interface NavbarProps {
@@ -26,6 +27,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenIngredients,
   activeCategory,
 }) => {
+  const navigate = useNavigate();
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
   return (
@@ -52,23 +54,23 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="bg-[#244226] text-[#FAF8F5] px-6 lg:px-12 py-4 flex items-center justify-between border-b border-white/10 shadow-md">
         
         {/* Left: Brand Logo */}
-        <div className="flex items-center gap-3 cursor-pointer" onClick={() => onSelectCategory('All')}>
+        <Link to="/" className="flex items-center gap-3 cursor-pointer">
           <div className="w-8 h-8 rounded-full bg-[#38633F] flex items-center justify-center border border-white/20 shadow-inner">
             <Leaf className="w-4 h-4 text-white" />
           </div>
           <span className="font-sans text-xl lg:text-2xl font-medium tracking-wide text-white">
             Leafology
           </span>
-        </div>
+        </Link>
 
         {/* Center: Main Navigation Menu */}
         <nav className="hidden md:flex items-center gap-7 lg:gap-9 text-xs lg:text-sm font-normal text-white/90">
-          <button
-            onClick={() => onSelectCategory('All')}
+          <Link
+            to="/"
             className={`transition-colors hover:text-emerald-200 ${activeCategory === 'All' ? 'text-emerald-200 font-semibold' : 'text-white/90'}`}
           >
             Home
-          </button>
+          </Link>
           
           <button
             onClick={onOpenStory}
@@ -83,12 +85,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             onMouseEnter={() => setShowCategoryDropdown(true)}
             onMouseLeave={() => setShowCategoryDropdown(false)}
           >
-            <button
-              onClick={() => onSelectCategory('All')}
+            <Link
+              to="/shop"
               className="flex items-center gap-1 hover:text-emerald-200 text-white/90 transition-colors py-1"
             >
               Collection +
-            </button>
+            </Link>
 
             {showCategoryDropdown && (
               <motion.div
@@ -98,8 +100,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="absolute top-full left-0 w-56 bg-[#1A331E] rounded-xl p-2 border border-white/15 shadow-2xl z-50 mt-1"
               >
                 {(['Skin', 'Hair', 'Teeth', 'Body', 'Home', 'Bundles', 'Refills'] as Category[]).map((cat) => (
-                  <button
+                  <Link
                     key={cat}
+                    to={`/shop/${cat}`}
                     onClick={() => {
                       onSelectCategory(cat);
                       setShowCategoryDropdown(false);
@@ -110,18 +113,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                   >
                     <span>{cat}</span>
                     {cat === 'Refills' && <span className="text-[10px] bg-[#38633F] text-white px-2 py-0.5 rounded-full">Eco</span>}
-                  </button>
+                  </Link>
                 ))}
               </motion.div>
             )}
           </div>
 
-          <button
-            onClick={() => onSelectCategory('Skin')}
+          <Link
+            to="/shop"
             className="transition-colors hover:text-emerald-200 text-white/90"
           >
             Shop +
-          </button>
+          </Link>
 
           <button
             onClick={onOpenStory}
@@ -134,10 +137,10 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Right: Search, Account, Cart Icons & Mobile Toggle */}
         <div className="flex items-center gap-5 sm:gap-6">
           <button
-            onClick={onOpenQuiz}
+            onClick={() => navigate('/search')}
             className="text-white/80 hover:text-white transition-colors"
-            title="Search"
-            aria-label="Search"
+            title="Search Products"
+            aria-label="Search Products"
           >
             <Search className="w-5 h-5 stroke-[1.75]" />
           </button>

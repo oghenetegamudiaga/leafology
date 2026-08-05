@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, ShoppingBag, X, Sparkles, ChevronRight, Leaf, Heart, BookOpen, ShieldCheck, HelpCircle } from 'lucide-react';
+import { Search, ShoppingBag, X, Sparkles, ChevronRight, Leaf, BookOpen, ShieldCheck } from 'lucide-react';
 import { Category } from '../types';
 
 interface FramerMobileMenuProps {
@@ -18,7 +19,6 @@ interface FramerMobileMenuProps {
 export const FramerMobileMenu: React.FC<FramerMobileMenuProps> = ({
   isOpen,
   onClose,
-  onSelectCategory,
   onOpenQuiz,
   onOpenStory,
   onOpenIngredients,
@@ -26,6 +26,7 @@ export const FramerMobileMenu: React.FC<FramerMobileMenuProps> = ({
   cartCount,
   activeCategory,
 }) => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
 
   const categories: { label: Category; desc: string; icon: string }[] = [
@@ -39,7 +40,16 @@ export const FramerMobileMenu: React.FC<FramerMobileMenuProps> = ({
     { label: 'Refills', desc: 'Paper bag eco refills & subscription sets', icon: '♻️' },
   ];
 
-  // Variants for Framer Motion animation container & staggered children
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate('/search');
+    }
+    onClose();
+  };
+
   const backdropVariants = {
     closed: { opacity: 0, transition: { duration: 0.25 } },
     open: { opacity: 1, transition: { duration: 0.3 } }
@@ -102,9 +112,9 @@ export const FramerMobileMenu: React.FC<FramerMobileMenuProps> = ({
           >
             {/* Top Bar with Brand & Close Button */}
             <div className="flex items-center justify-between pb-4 border-b border-white/10">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2" onClick={() => { navigate('/'); onClose(); }}>
                 <Leaf className="w-5 h-5 text-[#8CAE92]" />
-                <span className="font-serif text-2xl tracking-wide font-semibold">Leafology</span>
+                <span className="font-serif text-2xl tracking-wide font-semibold cursor-pointer">Leafology</span>
               </div>
               <motion.button
                 whileTap={{ scale: 0.9 }}
@@ -117,8 +127,8 @@ export const FramerMobileMenu: React.FC<FramerMobileMenuProps> = ({
               </motion.button>
             </div>
 
-            {/* Mobile Search Bar */}
-            <motion.div custom={0} variants={itemVariants} className="mt-4">
+            {/* Mobile Search Bar Form */}
+            <motion.form custom={0} variants={itemVariants} onSubmit={handleSearchSubmit} className="mt-4">
               <div className="relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
                 <input
@@ -129,7 +139,7 @@ export const FramerMobileMenu: React.FC<FramerMobileMenuProps> = ({
                   className="w-full pl-11 pr-4 py-3 bg-white/10 rounded-full text-sm text-white placeholder-white/50 border border-white/10 focus:outline-none focus:border-[#8CAE92] transition-all"
                 />
               </div>
-            </motion.div>
+            </motion.form>
 
             {/* Quick Action Pills */}
             <motion.div custom={1} variants={itemVariants} className="mt-4 flex gap-2 overflow-x-auto no-scrollbar pb-2">
@@ -156,7 +166,7 @@ export const FramerMobileMenu: React.FC<FramerMobileMenuProps> = ({
               </button>
             </motion.div>
 
-            {/* Main Category List with Staggered Framer Motion */}
+            {/* Main Category List */}
             <div className="mt-6 flex-1 flex flex-col gap-2">
               <span className="text-xs uppercase tracking-widest text-white/40 font-semibold mb-1">
                 Shop Collections
@@ -169,7 +179,11 @@ export const FramerMobileMenu: React.FC<FramerMobileMenuProps> = ({
                 >
                   <button
                     onClick={() => {
-                      onSelectCategory(cat.label);
+                      if (cat.label === 'All') {
+                        navigate('/shop');
+                      } else {
+                        navigate(`/shop/${cat.label}`);
+                      }
                       onClose();
                     }}
                     className={`w-full flex items-center justify-between p-3.5 rounded-2xl transition-all text-left ${

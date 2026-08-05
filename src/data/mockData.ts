@@ -3,6 +3,7 @@ import { Product, Ingredient, Testimonial, BlogPost, QuizQuestion } from '../typ
 export const PRODUCTS: Product[] = [
   {
     id: 'prod-1',
+    slug: 'renaissance-cleansing-powder',
     name: 'Renaissance Cleansing Powder',
     subtitle: 'Soothing Barrier Repair Drops & Powder Formula',
     category: 'Skin',
@@ -43,6 +44,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'prod-2',
+    slug: 'hibiscus-dream-hair-potion',
     name: 'Hibiscus Dream Hair Potion',
     subtitle: 'Nourishing Scalp & End Barrier drops',
     category: 'Hair',
@@ -77,6 +79,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'prod-3',
+    slug: 'zero-waste-tooth-powder',
     name: 'Zero-Waste Tooth Powder',
     subtitle: 'Mineralizing Mint & Cacao Tooth Polish',
     category: 'Teeth',
@@ -106,6 +109,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'prod-4',
+    slug: 'overnight-renaissance-magic-balm',
     name: 'Overnight Renaissance Magic Balm',
     subtitle: 'Ultra-Nourishing Multi-Purpose Skin Butter',
     category: 'Skin',
@@ -137,6 +141,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'prod-5',
+    slug: 'wild-rose-and-tea-clay-facial-polish',
     name: 'Wild Rose & Tea Clay Facial Polish',
     subtitle: 'Gentle Botanical Exfoliant & Mask Duo',
     category: 'Skin',
@@ -166,6 +171,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'prod-6',
+    slug: 'the-good-day-ritual-kit',
     name: 'The Good Day Ritual Kit',
     subtitle: 'Complete 3-Step Morning Skincare & Haircare Bundle',
     category: 'Bundles',
@@ -194,6 +200,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'prod-7',
+    slug: 'oxfordshire-tea-and-cedar-botanical-candle',
     name: 'Oxfordshire Tea & Cedar Botanical Candle',
     subtitle: 'Hand-Poured Rapeseed & Soy Wax Candle',
     category: 'Home',
@@ -222,6 +229,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'prod-8',
+    slug: 'shikakai-scalp-and-hair-powder-cleanser',
     name: 'Shikakai Scalp & Hair Powder Cleanser',
     subtitle: 'Ayurvedic Herbal Shampoo Alternative',
     category: 'Hair',

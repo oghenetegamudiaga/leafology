@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Leaf, ArrowRight, ShieldCheck, Heart, Award, Check } from 'lucide-react';
 import { Category } from '../types';
 
 interface FooterProps {
-  onSelectCategory: (cat: Category) => void;
+  onSelectCategory?: (cat: Category) => void;
   onOpenStory: () => void;
   onOpenIngredients: () => void;
   onOpenQuiz: () => void;
@@ -11,11 +12,9 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({
-  onSelectCategory,
   onOpenStory,
   onOpenIngredients,
   onOpenQuiz,
-  onOpenRefills,
 }) => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
@@ -79,10 +78,10 @@ export const Footer: React.FC<FooterProps> = ({
           
           {/* Col 1: Brand Info */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-2">
+            <Link to="/" className="flex items-center gap-2">
               <Leaf className="w-6 h-6 text-[#8CAE92]" />
               <span className="font-serif text-3xl font-bold tracking-wider text-white">Leafology</span>
-            </div>
+            </Link>
             <p className="text-white/70 text-xs leading-relaxed max-w-sm font-light">
               Award-winning, plant-based skincare, haircare & home remedies. Handcrafted in small fresh runs in Oxfordshire, UK. 100% waterless powders & plastic-free paper refills.
             </p>
@@ -98,12 +97,12 @@ export const Footer: React.FC<FooterProps> = ({
             <ul className="space-y-2 text-xs text-white/70">
               {(['Skin', 'Hair', 'Teeth', 'Body', 'Home', 'Bundles', 'Refills'] as Category[]).map((cat) => (
                 <li key={cat}>
-                  <button
-                    onClick={() => onSelectCategory(cat)}
-                    className="hover:text-amber-200 transition-colors"
+                  <Link
+                    to={`/shop/${cat}`}
+                    className="hover:text-amber-200 transition-colors block"
                   >
                     {cat} Care
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -129,9 +128,9 @@ export const Footer: React.FC<FooterProps> = ({
                 </button>
               </li>
               <li>
-                <button onClick={onOpenRefills} className="hover:text-amber-200 transition-colors">
+                <Link to="/shop/Refills" className="hover:text-amber-200 transition-colors block">
                   The Refill System
-                </button>
+                </Link>
               </li>
             </ul>
           </div>
