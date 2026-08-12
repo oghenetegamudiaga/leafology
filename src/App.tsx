@@ -7,12 +7,16 @@ import { ProductPage } from './pages/ProductPage';
 import { SearchPage } from './pages/SearchPage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { OrderConfirmationPage } from './pages/OrderConfirmationPage';
+import { LoginPage } from './pages/LoginPage';
+import { RegisterPage } from './pages/RegisterPage';
+import { AccountPage } from './pages/AccountPage';
 
+import { AuthProvider } from './context/AuthContext';
+import { WishlistProvider } from './context/WishlistContext';
 import { PRODUCTS } from './data/mockData';
 import { Product, CartItem, Variant } from './types';
 
 export default function App() {
-  // Task 1: Hydrate cartItems from localStorage (key: leafology_cart)
   const [cartItems, setCartItems] = useState<CartItem[]>(() => {
     try {
       const stored = localStorage.getItem('leafology_cart');
@@ -110,62 +114,78 @@ export default function App() {
   };
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          element={
-            <Layout
-              cartItems={cartItems}
-              onAddToCart={handleAddToCart}
-              onUpdateQuantity={handleUpdateQuantity}
-              onRemoveItem={handleRemoveItem}
-              onCheckout={handleCheckout}
-              checkoutMessage={checkoutMessage}
-              setCheckoutMessage={setCheckoutMessage}
-            />
-          }
-        >
-          <Route
-            path="/"
-            element={<HomePage onAddToCart={handleAddToCart} onOpenStory={() => {}} />}
-          />
-          <Route
-            path="/shop"
-            element={<ShopPage onAddToCart={handleAddToCart} />}
-          />
-          <Route
-            path="/shop/:category"
-            element={<ShopPage onAddToCart={handleAddToCart} />}
-          />
-          <Route
-            path="/product/:slug"
-            element={<ProductPage onAddToCart={handleAddToCart} />}
-          />
-          <Route
-            path="/search"
-            element={<SearchPage onAddToCart={handleAddToCart} />}
-          />
-          <Route
-            path="/checkout"
-            element={
-              <CheckoutPage
-                cartItems={cartItems}
-                onUpdateQuantity={handleUpdateQuantity}
-                onRemoveItem={handleRemoveItem}
-                onClearCart={handleClearCart}
+    <AuthProvider>
+      <WishlistProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route
+              element={
+                <Layout
+                  cartItems={cartItems}
+                  onAddToCart={handleAddToCart}
+                  onUpdateQuantity={handleUpdateQuantity}
+                  onRemoveItem={handleRemoveItem}
+                  onCheckout={handleCheckout}
+                  checkoutMessage={checkoutMessage}
+                  setCheckoutMessage={setCheckoutMessage}
+                />
+              }
+            >
+              <Route
+                path="/"
+                element={<HomePage onAddToCart={handleAddToCart} onOpenStory={() => {}} />}
               />
-            }
-          />
-          <Route
-            path="/order-confirmation/:orderId"
-            element={<OrderConfirmationPage />}
-          />
-          <Route
-            path="*"
-            element={<HomePage onAddToCart={handleAddToCart} onOpenStory={() => {}} />}
-          />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+              <Route
+                path="/shop"
+                element={<ShopPage onAddToCart={handleAddToCart} />}
+              />
+              <Route
+                path="/shop/:category"
+                element={<ShopPage onAddToCart={handleAddToCart} />}
+              />
+              <Route
+                path="/product/:slug"
+                element={<ProductPage onAddToCart={handleAddToCart} />}
+              />
+              <Route
+                path="/search"
+                element={<SearchPage onAddToCart={handleAddToCart} />}
+              />
+              <Route
+                path="/checkout"
+                element={
+                  <CheckoutPage
+                    cartItems={cartItems}
+                    onUpdateQuantity={handleUpdateQuantity}
+                    onRemoveItem={handleRemoveItem}
+                    onClearCart={handleClearCart}
+                  />
+                }
+              />
+              <Route
+                path="/order-confirmation/:orderId"
+                element={<OrderConfirmationPage />}
+              />
+              <Route
+                path="/login"
+                element={<LoginPage />}
+              />
+              <Route
+                path="/register"
+                element={<RegisterPage />}
+              />
+              <Route
+                path="/account"
+                element={<AccountPage onAddToCart={handleAddToCart} />}
+              />
+              <Route
+                path="*"
+                element={<HomePage onAddToCart={handleAddToCart} onOpenStory={() => {}} />}
+              />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </WishlistProvider>
+    </AuthProvider>
   );
 }

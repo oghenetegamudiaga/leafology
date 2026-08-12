@@ -17,6 +17,7 @@ import {
 import { PRODUCTS } from '../data/mockData';
 import { Product, Variant } from '../types';
 import { ProductCard } from '../components/ProductCard';
+import { useWishlist } from '../context/WishlistContext';
 
 interface ProductPageProps {
   onAddToCart: (product: Product, variant: Variant, isSubscription: boolean) => void;
@@ -25,6 +26,7 @@ interface ProductPageProps {
 export const ProductPage: React.FC<ProductPageProps> = ({ onAddToCart }) => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
+  const { isInWishlist, toggleWishlist } = useWishlist();
 
   const product = PRODUCTS.find((p) => p.slug === slug);
 
@@ -292,24 +294,39 @@ export const ProductPage: React.FC<ProductPageProps> = ({ onAddToCart }) => {
               </p>
             </div>
 
-            {/* Main Add to Basket Button */}
-            <button
-              onClick={handleAdd}
-              disabled={addedToast}
-              className="w-full py-4 px-8 rounded-full bg-[#1A331E] text-white font-semibold text-base hover:bg-[#2D5233] transition-all shadow-xl flex items-center justify-center gap-3"
-            >
-              {addedToast ? (
-                <>
-                  <Check className="w-5 h-5 text-emerald-300" />
-                  <span>Added to Basket!</span>
-                </>
-              ) : (
-                <>
-                  <ShoppingBag className="w-5 h-5" />
-                  <span>Add to Basket — £{finalPrice.toFixed(2)}</span>
-                </>
-              )}
-            </button>
+            {/* Main Add to Basket & Wishlist Action Bar */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleAdd}
+                disabled={addedToast}
+                className="flex-1 py-4 px-8 rounded-full bg-[#1A331E] text-white font-semibold text-base hover:bg-[#2D5233] transition-all shadow-xl flex items-center justify-center gap-3"
+              >
+                {addedToast ? (
+                  <>
+                    <Check className="w-5 h-5 text-emerald-300" />
+                    <span>Added to Basket!</span>
+                  </>
+                ) : (
+                  <>
+                    <ShoppingBag className="w-5 h-5" />
+                    <span>Add to Basket — £{finalPrice.toFixed(2)}</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                onClick={() => toggleWishlist(product.id)}
+                className={`w-14 h-14 rounded-full border border-stone-200 flex items-center justify-center transition-all shadow-md flex-shrink-0 ${
+                  isInWishlist(product.id)
+                    ? 'bg-rose-600 text-white border-rose-600'
+                    : 'bg-white text-stone-700 hover:text-rose-600 hover:border-rose-300'
+                }`}
+                title={isInWishlist(product.id) ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                aria-label={isInWishlist(product.id) ? 'Remove from Wishlist' : 'Add to Wishlist'}
+              >
+                <Heart className={`w-6 h-6 ${isInWishlist(product.id) ? 'fill-white stroke-white' : ''}`} />
+              </button>
+            </div>
 
             {/* Trust Icon Row */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 text-center text-[11px] text-stone-600">

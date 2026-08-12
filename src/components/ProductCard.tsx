@@ -1,22 +1,28 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Plus, Star, Leaf, Check } from 'lucide-react';
+import { Plus, Star, Leaf, Check, Heart } from 'lucide-react';
 import { Product } from '../types';
+import { useWishlist } from '../context/WishlistContext';
 
 interface ProductCardProps {
   product: Product;
   onQuickAdd?: (product: Product) => void;
   className?: string;
+  onRemoveFromWishlist?: (product: Product) => void;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   onQuickAdd,
   className = '',
+  onRemoveFromWishlist,
 }) => {
   const navigate = useNavigate();
+  const { isInWishlist, toggleWishlist } = useWishlist();
   const [added, setAdded] = useState(false);
+
+  const isLiked = isInWishlist(product.id);
 
   const handleCardClick = () => {
     navigate(`/product/${product.slug}`);
@@ -31,15 +37,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     }
   };
 
+  const handleWishlistClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onRemoveFromWishlist && isLiked) {
+      onRemoveFromWishlist(product);
+    } else {
+      toggleWishlist(product.id);
+    }
+  };
+
   return (
     <motion.div
       whileHover={{ y: -6 }}
       transition={{ duration: 0.3 }}
       onClick={handleCardClick}
-      className={`bg-white rounded-3xl p-4 shadow-sm hover:shadow-xl border border-stone-200/80 transition-all cursor-pointer flex flex-col justify-between group ${className}`}
+      className={`bg-white rounded-3xl p-4 shadow-sm hover:shadow-xl border border-stone-200/80 transition-all cursor-pointer flex flex-col justify-between group relative ${className}`}
     >
       <div>
-        {/* Image Container with Badges & Quick Add (+) Button */}
+        {/* Image Container with Badges & Action Buttons */}
         <div className="relative aspect-square rounded-2xl bg-[#F4F8F5] overflow-hidden mb-4 p-4 flex items-center justify-center">
           
           {/* Top Left Badges */}
@@ -56,25 +71,44 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             )}
           </div>
 
-          {/* Quick Add (+) Button */}
-          {onQuickAdd && (
+          {/* Top Right Action Icons Container */}
+          <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5">
+            {/* Wishlist Heart Button */}
             <motion.button
               whileTap={{ scale: 0.85 }}
-              onClick={handleQuickAddClick}
-              className={`absolute top-3 right-3 z-10 w-9 h-9 rounded-full flex items-center justify-center shadow-md transition-all ${
-                added
-                  ? 'bg-[#2D5233] text-white'
-                  : 'bg-[#1A331E] text-white hover:bg-[#2D5233]'
+              onClick={handleWishlistClick}
+              className={`w-9 h-9 rounded-full flex items-center justify-center shadow-md transition-all ${
+                isLiked
+                  ? 'bg-rose-600 text-white'
+                  : 'bg-white/90 text-stone-600 hover:text-rose-600 hover:bg-white border border-stone-200'
               }`}
-              title="Quick Add to Basket"
+              title={isLiked ? 'Remove from Wishlist' : 'Add to Wishlist'}
+              aria-label={isLiked ? 'Remove from Wishlist' : 'Add to Wishlist'}
             >
-              {added ? (
-                <Check className="w-4 h-4 text-white" />
-              ) : (
-                <Plus className="w-4 h-4 text-white" />
-              )}
+              <Heart className={`w-4 h-4 ${isLiked ? 'fill-white stroke-white' : ''}`} />
             </motion.button>
-          )}
+
+            {/* Quick Add (+) Button */}
+            {onQuickAdd && (
+              <motion.button
+                whileTap={{ scale: 0.85 }}
+                onClick={handleQuickAddClick}
+                className={`w-9 h-9 rounded-full flex items-center justify-center shadow-md transition-all ${
+                  added
+                    ? 'bg-[#2D5233] text-white'
+                    : 'bg-[#1A331E] text-white hover:bg-[#2D5233]'
+                }`}
+                title="Quick Add to Basket"
+                aria-label="Quick Add to Basket"
+              >
+                {added ? (
+                  <Check className="w-4 h-4 text-white" />
+                ) : (
+                  <Plus className="w-4 h-4 text-white" />
+                )}
+              </motion.button>
+            )}
+          </div>
 
           {/* Product Image */}
           <img

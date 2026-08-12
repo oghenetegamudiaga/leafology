@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, ShoppingBag, X, Sparkles, ChevronRight, Leaf, BookOpen, ShieldCheck } from 'lucide-react';
+import { Search, ShoppingBag, X, Sparkles, ChevronRight, Leaf, BookOpen, ShieldCheck, User } from 'lucide-react';
 import { Category } from '../types';
+import { useAuth } from '../context/AuthContext';
 
 interface FramerMobileMenuProps {
   isOpen: boolean;
@@ -27,6 +28,7 @@ export const FramerMobileMenu: React.FC<FramerMobileMenuProps> = ({
   activeCategory,
 }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
 
   const categories: { label: Category; desc: string; icon: string }[] = [
@@ -143,6 +145,16 @@ export const FramerMobileMenu: React.FC<FramerMobileMenuProps> = ({
 
             {/* Quick Action Pills */}
             <motion.div custom={1} variants={itemVariants} className="mt-4 flex gap-2 overflow-x-auto no-scrollbar pb-2">
+              <button
+                onClick={() => {
+                  navigate(user ? '/account' : '/login');
+                  onClose();
+                }}
+                className="flex items-center gap-2 px-4 py-2 bg-[#38633F] text-white rounded-full text-xs font-semibold whitespace-nowrap border border-emerald-400/30"
+              >
+                <User className="w-3.5 h-3.5 text-emerald-300" />
+                {user ? `My Account (${user.name})` : 'Log In / Register'}
+              </button>
               <button
                 onClick={() => { onOpenQuiz(); onClose(); }}
                 className="flex items-center gap-2 px-4 py-2 bg-[#8CAE92]/20 border border-[#8CAE92]/40 text-[#FAF8F5] rounded-full text-xs font-medium whitespace-nowrap"

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Search, ShoppingBag, Sparkles, User, Leaf } from 'lucide-react';
 import { Category } from '../types';
+import { useAuth } from '../context/AuthContext';
 
 interface NavbarProps {
   cartCount: number;
@@ -28,6 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   activeCategory,
 }) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
   return (
@@ -146,12 +148,18 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           <button
-            onClick={onOpenStory}
-            className="text-white/80 hover:text-white transition-colors"
-            title="Account"
-            aria-label="Account"
+            onClick={() => navigate(user ? '/account' : '/login')}
+            className="text-white/80 hover:text-white transition-colors relative flex items-center justify-center"
+            title={user ? `Account (${user.name})` : 'Account Login'}
+            aria-label={user ? `Account (${user.name})` : 'Account Login'}
           >
-            <User className="w-5 h-5 stroke-[1.75]" />
+            {user ? (
+              <div className="w-7 h-7 rounded-full bg-[#38633F] border border-emerald-300 text-white font-bold text-xs flex items-center justify-center">
+                {user.name.charAt(0).toUpperCase()}
+              </div>
+            ) : (
+              <User className="w-5 h-5 stroke-[1.75]" />
+            )}
           </button>
 
           {/* Cart Icon Button with Badge */}
