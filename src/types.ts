@@ -89,3 +89,25 @@ export interface QuizQuestion {
     value: string;
   }[];
 }
+
+export interface ShippingAddress {
+  fullName: string;
+  email: string;
+  addressLine1: string;
+  addressLine2?: string;
+  city: string;
+  postcode: string;
+  country: string;
+}
+
+export interface Order {
+  id: string;
+  createdAt: string;
+  items: CartItem[];
+  shippingAddress: ShippingAddress;
+  giftNote?: string;
+  subtotal: number;
+  discount: number;
+  total: number;
+}
+

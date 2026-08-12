@@ -1,26 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { HomePage } from './pages/HomePage';
 import { ShopPage } from './pages/ShopPage';
 import { ProductPage } from './pages/ProductPage';
 import { SearchPage } from './pages/SearchPage';
+import { CheckoutPage } from './pages/CheckoutPage';
+import { OrderConfirmationPage } from './pages/OrderConfirmationPage';
 
 import { PRODUCTS } from './data/mockData';
 import { Product, CartItem, Variant } from './types';
 
 export default function App() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 'initial-1',
-      product: PRODUCTS[0],
-      selectedVariant: PRODUCTS[0].variants[0],
-      quantity: 1,
-      isSubscription: false,
+  // Task 1: Hydrate cartItems from localStorage (key: leafology_cart)
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    try {
+      const stored = localStorage.getItem('leafology_cart');
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (e) {
+      console.error('Failed to load cart from localStorage:', e);
     }
-  ]);
+    return [
+      {
+        id: 'initial-1',
+        product: PRODUCTS[0],
+        selectedVariant: PRODUCTS[0].variants[0],
+        quantity: 1,
+        isSubscription: false,
+      }
+    ];
+  });
 
   const [checkoutMessage, setCheckoutMessage] = useState<string | null>(null);
+
+  // Sync cartItems changes to localStorage
+  useEffect(() => {
+    try {
+      localStorage.setItem('leafology_cart', JSON.stringify(cartItems));
+    } catch (e) {
+      console.error('Failed to save cart to localStorage:', e);
+    }
+  }, [cartItems]);
 
   const handleAddToCart = (product: Product, variant: Variant, isSubscription: boolean) => {
     setCartItems((prev) => {
@@ -68,11 +90,20 @@ export default function App() {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
+  const handleClearCart = () => {
+    setCartItems([]);
+    try {
+      localStorage.removeItem('leafology_cart');
+    } catch (e) {
+      console.error('Failed to clear cart in localStorage:', e);
+    }
+  };
+
   const handleCheckout = () => {
     setCheckoutMessage(
       'Thank you! Your Leafology order has been placed. We are hand-batching your order in Oxfordshire UK.'
     );
-    setCartItems([]);
+    handleClearCart();
     setTimeout(() => {
       setCheckoutMessage(null);
     }, 4000);
@@ -113,6 +144,21 @@ export default function App() {
           <Route
             path="/search"
             element={<SearchPage onAddToCart={handleAddToCart} />}
+          />
+          <Route
+            path="/checkout"
+            element={
+              <CheckoutPage
+                cartItems={cartItems}
+                onUpdateQuantity={handleUpdateQuantity}
+                onRemoveItem={handleRemoveItem}
+                onClearCart={handleClearCart}
+              />
+            }
+          />
+          <Route
+            path="/order-confirmation/:orderId"
+            element={<OrderConfirmationPage />}
           />
           <Route
             path="*"

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, Trash2, ShoppingBag, Plus, Minus, ArrowRight, ShieldCheck, Gift, Tag, Check, Sparkles } from 'lucide-react';
+import { X, Trash2, ShoppingBag, Plus, Minus, ArrowRight, ShieldCheck, Gift, Tag, Check, Sparkles, Truck } from 'lucide-react';
 import { CartItem } from '../types';
 
 interface CartDrawerProps {
@@ -9,7 +10,6 @@ interface CartDrawerProps {
   cartItems: CartItem[];
   onUpdateQuantity: (id: string, delta: number) => void;
   onRemoveItem: (id: string) => void;
-  onCheckout: () => void;
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({
@@ -18,8 +18,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   cartItems,
   onUpdateQuantity,
   onRemoveItem,
-  onCheckout,
 }) => {
+  const navigate = useNavigate();
   const [discountCode, setDiscountCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(false);
   const [giftNote, setGiftNote] = useState('');
@@ -35,16 +35,42 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const discountAmount = appliedDiscount ? subtotal * 0.05 : 0;
   const finalTotal = Math.max(0, subtotal - discountAmount);
 
-  // Threshold calculations
-  const freeGiftThreshold = 85;
+  // Thresholds
   const discount55Threshold = 55;
-  const progressToGift = Math.min(100, (subtotal / freeGiftThreshold) * 100);
+  const freeGiftThreshold = 85;
+
+  // Determine progress target & text
+  let thresholdMessage = '';
+  let progressPercentage = 100;
+
+  if (subtotal < discount55Threshold) {
+    const remaining = discount55Threshold - subtotal;
+    progressPercentage = (subtotal / discount55Threshold) * 100;
+    thresholdMessage = `Spend £${remaining.toFixed(2)} more for 5% off with code 555!`;
+  } else if (subtotal < freeGiftThreshold) {
+    const remaining = freeGiftThreshold - subtotal;
+    progressPercentage = (subtotal / freeGiftThreshold) * 100;
+    thresholdMessage = `Add £${remaining.toFixed(2)} more and we'll slip a free surprise into your parcel!`;
+  } else {
+    progressPercentage = 100;
+    thresholdMessage = "🎉 Free surprise gift unlocked for your order!";
+  }
 
   const handleApplyCode = (e: React.FormEvent) => {
     e.preventDefault();
     if (discountCode.trim() === '555' || discountCode.trim().toUpperCase() === 'LEAF10') {
       setAppliedDiscount(true);
     }
+  };
+
+  const handleProceedToCheckout = () => {
+    onClose();
+    navigate('/checkout');
+  };
+
+  const handleShopBestsellers = () => {
+    onClose();
+    navigate('/shop');
   };
 
   return (
@@ -80,38 +106,36 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <button
                 onClick={onClose}
                 className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
+                aria-label="Close cart"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {/* Free Gift & UK Shipping Progress Bar */}
+            {/* Free UK Delivery & Threshold Progress Banner */}
             <div className="p-4 bg-[#E8F0EA] border-b border-stone-200 text-xs space-y-2">
+              <div className="flex items-center gap-1.5 font-bold text-[#2D5233]">
+                <Truck className="w-4 h-4 text-[#2D5233]" />
+                <span>You've got free UK delivery — always.</span>
+              </div>
+
               <div className="flex items-center justify-between font-semibold text-[#1A331E]">
                 <span className="flex items-center gap-1.5">
-                  <Gift className="w-4 h-4 text-[#2D5233]" />
-                  {subtotal >= freeGiftThreshold
-                    ? '🎉 Free Surprise Gift Unlocked!'
-                    : `Add £${(freeGiftThreshold - subtotal).toFixed(2)} for a free surprise gift!`}
+                  <Gift className="w-3.5 h-3.5 text-[#2D5233]" />
+                  <span>{thresholdMessage}</span>
                 </span>
-                <span>{progressToGift.toFixed(0)}%</span>
+                <span className="text-[11px] text-stone-500 font-bold">{progressPercentage.toFixed(0)}%</span>
               </div>
 
               <div className="w-full h-2 rounded-full bg-stone-300 overflow-hidden">
                 <div
                   className="h-full bg-[#2D5233] transition-all duration-500 rounded-full"
-                  style={{ width: `${progressToGift}%` }}
+                  style={{ width: `${Math.min(100, Math.max(5, progressPercentage))}%` }}
                 />
               </div>
-
-              {subtotal < discount55Threshold && (
-                <p className="text-[11px] text-stone-500 italic">
-                  Tip: Spend £55 and apply code <b className="text-[#1A331E]">555</b> for 5% off!
-                </p>
-              )}
             </div>
 
-            {/* Cart Items List */}
+            {/* Cart Items List or Empty State */}
             <div className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar">
               {cartItems.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-12">
@@ -119,14 +143,16 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     <ShoppingBag className="w-8 h-8" />
                   </div>
                   <div className="space-y-1">
-                    <h4 className="font-serif text-xl font-bold text-[#1A331E]">Your basket is empty</h4>
+                    <h4 className="font-serif text-xl font-bold text-[#1A331E]">
+                      Your basket's feeling a little bare. Let's fix that.
+                    </h4>
                     <p className="text-xs text-stone-500 max-w-xs">
                       Explore our handcrafted waterless powders, balms & eco paper refills.
                     </p>
                   </div>
                   <button
-                    onClick={onClose}
-                    className="px-6 py-2.5 rounded-full bg-[#1A331E] text-white font-semibold text-xs hover:bg-[#2D5233]"
+                    onClick={handleShopBestsellers}
+                    className="px-6 py-2.5 rounded-full bg-[#1A331E] text-white font-semibold text-xs hover:bg-[#2D5233] transition-colors shadow-md"
                   >
                     Shop Bestsellers
                   </button>
@@ -219,7 +245,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     <textarea
                       value={giftNote}
                       onChange={(e) => setGiftNote(e.target.value)}
-                      placeholder="Write your note here — we will write it out by hand on recycled botanical card!"
+                      placeholder="Add a gift note (optional) — we'll write it out by hand."
                       className="w-full mt-2 p-3 text-xs rounded-xl border border-stone-300 bg-white focus:outline-none focus:border-[#1A331E]"
                       rows={3}
                     />
@@ -228,7 +254,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               )}
             </div>
 
-            {/* Footer Summary & Checkout */}
+            {/* Footer Summary & Checkout Button */}
             {cartItems.length > 0 && (
               <div className="p-6 bg-white border-t border-stone-200 space-y-4">
                 
@@ -259,7 +285,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   </div>
                 )}
 
-                {/* Subtotal lines */}
+                {/* Subtotal Lines */}
                 <div className="space-y-1.5 text-xs text-stone-600 pt-1">
                   <div className="flex justify-between">
                     <span>Subtotal</span>
@@ -275,9 +301,9 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   </div>
                 </div>
 
-                {/* Checkout Button */}
+                {/* Checkout Button - Navigates to /checkout */}
                 <button
-                  onClick={onCheckout}
+                  onClick={handleProceedToCheckout}
                   className="w-full py-4 rounded-full bg-[#1A331E] text-white font-semibold text-sm hover:bg-[#2D5233] transition-colors shadow-lg flex items-center justify-center gap-2 group"
                 >
                   <span>Proceed to Secure Checkout</span>
