@@ -37,8 +37,6 @@ export default function App() {
     ];
   });
 
-  const [checkoutMessage, setCheckoutMessage] = useState<string | null>(null);
-
   // Sync cartItems changes to localStorage
   useEffect(() => {
     try {
@@ -103,16 +101,6 @@ export default function App() {
     }
   };
 
-  const handleCheckout = () => {
-    setCheckoutMessage(
-      'Thank you! Your Leafology order has been placed. We are hand-batching your order in Oxfordshire UK.'
-    );
-    handleClearCart();
-    setTimeout(() => {
-      setCheckoutMessage(null);
-    }, 4000);
-  };
-
   return (
     <AuthProvider>
       <WishlistProvider>
@@ -125,9 +113,6 @@ export default function App() {
                   onAddToCart={handleAddToCart}
                   onUpdateQuantity={handleUpdateQuantity}
                   onRemoveItem={handleRemoveItem}
-                  onCheckout={handleCheckout}
-                  checkoutMessage={checkoutMessage}
-                  setCheckoutMessage={setCheckoutMessage}
                 />
               }
             >

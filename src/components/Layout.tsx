@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { FramerMobileMenu } from './FramerMobileMenu';
 import { Footer } from './Footer';
@@ -8,7 +8,6 @@ import { QuizModal } from './QuizModal';
 import { IngredientModal } from './IngredientModal';
 import { OurStoryModal } from './OurStoryModal';
 import { ProductQuickViewModal } from './ProductQuickViewModal';
-import { PRODUCTS } from '../data/mockData';
 import { Category, CartItem, Product, Variant } from '../types';
 
 interface LayoutProps {
@@ -16,9 +15,6 @@ interface LayoutProps {
   onAddToCart: (product: Product, variant: Variant, isSubscription: boolean) => void;
   onUpdateQuantity: (id: string, delta: number) => void;
   onRemoveItem: (id: string) => void;
-  onCheckout: () => void;
-  checkoutMessage: string | null;
-  setCheckoutMessage: (msg: string | null) => void;
 }
 
 export const Layout: React.FC<LayoutProps> = ({
@@ -26,11 +22,7 @@ export const Layout: React.FC<LayoutProps> = ({
   onAddToCart,
   onUpdateQuantity,
   onRemoveItem,
-  onCheckout,
-  checkoutMessage,
-  setCheckoutMessage,
 }) => {
-  const location = useLocation();
   const [activeCategory, setActiveCategory] = useState<Category>('All');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -96,7 +88,6 @@ export const Layout: React.FC<LayoutProps> = ({
         cartItems={cartItems}
         onUpdateQuantity={onUpdateQuantity}
         onRemoveItem={onRemoveItem}
-        onCheckout={onCheckout}
       />
 
       <QuizModal
@@ -114,14 +105,6 @@ export const Layout: React.FC<LayoutProps> = ({
         isOpen={isStoryOpen}
         onClose={() => setIsStoryOpen(false)}
       />
-
-      {/* Checkout Success Notification */}
-      {checkoutMessage && (
-        <div className="fixed bottom-6 right-6 z-50 max-w-sm p-4 rounded-2xl bg-[#3A5A40] text-white shadow-2xl border border-white/20 text-xs font-semibold flex items-center justify-between gap-3 animate-bounce">
-          <span>{checkoutMessage}</span>
-          <button onClick={() => setCheckoutMessage(null)} className="text-white hover:opacity-75">✕</button>
-        </div>
-      )}
     </div>
   );
 };

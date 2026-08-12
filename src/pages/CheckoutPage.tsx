@@ -52,6 +52,7 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   onClearCart,
 }) => {
   const navigate = useNavigate();
+  const hasPlacedOrderRef = React.useRef<boolean>(false);
 
   const [discountCode, setDiscountCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(false);
@@ -105,6 +106,8 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
   };
 
   const onSubmitOrder = (data: CheckoutFormValues) => {
+    hasPlacedOrderRef.current = true;
+
     // Construct order object
     const newOrder: Order = {
       id: `LEAF-${Date.now().toString().slice(-8)}`,
@@ -135,13 +138,13 @@ export const CheckoutPage: React.FC<CheckoutPageProps> = ({
       console.error('Failed to save order to localStorage:', err);
     }
 
-    // Clear cart and navigate
-    onClearCart();
+    // Navigate first, then clear cart
     navigate(`/order-confirmation/${newOrder.id}`);
+    onClearCart();
   };
 
-  // If cart is empty, render friendly empty state
-  if (cartItems.length === 0) {
+  // If cart is empty and order wasn't just placed, render friendly empty state
+  if (cartItems.length === 0 && !hasPlacedOrderRef.current) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center p-8 text-center bg-[#FAF8F5]">
         <div className="w-20 h-20 rounded-full bg-stone-200 flex items-center justify-center text-stone-400 mb-4">
