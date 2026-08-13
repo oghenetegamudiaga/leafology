@@ -48,13 +48,13 @@ export const HomePage: React.FC<HomePageProps> = ({ onAddToCart, onOpenStory }) 
 
       {/* Zero-Waste Refill Explainer Section */}
       <RefillExplainer
-        onOpenRefills={() => navigate('/shop/Refills')}
+        onOpenRefills={() => navigate('/refills')}
       />
 
       {/* Testimonials Section */}
       <TestimonialsSection
         testimonials={TESTIMONIALS}
-        onOpenReviewsModal={onOpenStory}
+        onOpenReviewsModal={() => navigate('/our-story')}
       />
 
       {/* Blog Section */}

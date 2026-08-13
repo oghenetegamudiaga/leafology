@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Search, ShoppingBag, X, Sparkles, ChevronRight, Leaf, BookOpen, ShieldCheck, User } from 'lucide-react';
+import { Search, ShoppingBag, X, Sparkles, ChevronRight, Leaf, BookOpen, ShieldCheck, User, RefreshCw } from 'lucide-react';
 import { Category } from '../types';
 import { useAuth } from '../context/AuthContext';
 
@@ -163,18 +163,32 @@ export const FramerMobileMenu: React.FC<FramerMobileMenuProps> = ({
                 Find Your Routine Quiz
               </button>
               <button
-                onClick={() => { onOpenIngredients(); onClose(); }}
+                onClick={() => { navigate('/ingredients'); onClose(); }}
                 className="flex items-center gap-2 px-4 py-2 bg-white/10 text-white/90 rounded-full text-xs font-medium whitespace-nowrap"
               >
                 <Leaf className="w-3.5 h-3.5 text-emerald-300" />
                 Ingredient Glossary
               </button>
               <button
-                onClick={() => { onOpenStory(); onClose(); }}
+                onClick={() => { navigate('/our-story'); onClose(); }}
                 className="flex items-center gap-2 px-4 py-2 bg-white/10 text-white/90 rounded-full text-xs font-medium whitespace-nowrap"
               >
                 <BookOpen className="w-3.5 h-3.5 text-[#8CAE92]" />
                 Our Naked Story
+              </button>
+              <button
+                onClick={() => { navigate('/journal'); onClose(); }}
+                className="flex items-center gap-2 px-4 py-2 bg-white/10 text-white/90 rounded-full text-xs font-medium whitespace-nowrap"
+              >
+                <BookOpen className="w-3.5 h-3.5 text-amber-300" />
+                Botanical Journal
+              </button>
+              <button
+                onClick={() => { navigate('/refills'); onClose(); }}
+                className="flex items-center gap-2 px-4 py-2 bg-[#38633F] text-emerald-200 rounded-full text-xs font-semibold whitespace-nowrap border border-emerald-300/30"
+              >
+                <RefreshCw className="w-3.5 h-3.5 text-emerald-300" />
+                The Refill System
               </button>
             </motion.div>
 

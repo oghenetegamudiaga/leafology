@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowUpRight, Calendar, Clock, BookOpen, X } from 'lucide-react';
+import { ArrowUpRight, Calendar, Clock, BookOpen, ArrowRight } from 'lucide-react';
 import { BlogPost } from '../types';
 
 interface BlogSectionProps {
@@ -8,7 +9,7 @@ interface BlogSectionProps {
 }
 
 export const BlogSection: React.FC<BlogSectionProps> = ({ posts }) => {
-  const [activePost, setActivePost] = useState<BlogPost | null>(null);
+  const navigate = useNavigate();
 
   return (
     <section className="bg-[#FAF8F5] text-[#241C15] py-20 px-6 lg:px-12 border-b border-[#E8E2D7]">
@@ -16,6 +17,9 @@ export const BlogSection: React.FC<BlogSectionProps> = ({ posts }) => {
         
         {/* Section Header */}
         <div className="text-center space-y-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F0EA] border border-[#2D5233]/20 text-[#2D5233] text-xs font-semibold uppercase tracking-wider">
+            <BookOpen className="w-3.5 h-3.5" /> Leafology Botanical Journal
+          </div>
           <h2 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-normal text-[#1A331E]">
             Skin Care <span className="font-serif italic text-[#2D5233]">Tips & Trends</span>
           </h2>
@@ -31,7 +35,7 @@ export const BlogSection: React.FC<BlogSectionProps> = ({ posts }) => {
               key={post.id}
               whileHover={{ y: -6 }}
               transition={{ duration: 0.3 }}
-              onClick={() => setActivePost(post)}
+              onClick={() => navigate(`/journal/${post.slug}`)}
               className="bg-white rounded-3xl p-4 border border-stone-200 shadow-sm hover:shadow-xl transition-all cursor-pointer flex flex-col justify-between group"
             >
               <div className="space-y-4">
@@ -74,72 +78,18 @@ export const BlogSection: React.FC<BlogSectionProps> = ({ posts }) => {
           ))}
         </div>
 
-      </div>
-
-      {/* Blog Article Reader Modal */}
-      {activePost && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="relative w-full max-w-3xl bg-[#FAF8F5] rounded-3xl p-6 sm:p-10 text-[#1A331E] shadow-2xl overflow-y-auto max-h-[90vh] border border-stone-300"
+        {/* View All Articles CTA */}
+        <div className="text-center pt-4">
+          <Link
+            to="/journal"
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#1A331E] text-white font-semibold text-xs uppercase tracking-wider hover:bg-[#2D5233] transition-colors shadow-md group"
           >
-            <button
-              onClick={() => setActivePost(null)}
-              className="absolute top-6 right-6 w-9 h-9 rounded-full bg-stone-200 flex items-center justify-center hover:bg-stone-300 transition-colors"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#2D5233]/10 text-[#2D5233] text-xs font-semibold uppercase tracking-wider">
-                <BookOpen className="w-3.5 h-3.5" /> {activePost.category}
-              </div>
-
-              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#1A331E]">
-                {activePost.title}
-              </h2>
-
-              <div className="flex items-center gap-4 text-xs text-stone-500 border-b border-stone-200 pb-4">
-                <span>By {activePost.author}</span>
-                <span>•</span>
-                <span>{activePost.date}</span>
-                <span>•</span>
-                <span>{activePost.readTime}</span>
-              </div>
-
-              <div className="aspect-video rounded-2xl overflow-hidden">
-                <img
-                  src={activePost.image}
-                  alt={activePost.title}
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-
-              <div className="prose prose-stone max-w-none text-stone-700 leading-relaxed space-y-4">
-                <p className="font-serif text-lg italic text-[#1A331E] border-l-4 border-[#2D5233] pl-4">
-                  "{activePost.excerpt}"
-                </p>
-                <p>{activePost.content}</p>
-                <p>
-                  Every Leafology formula is created with pure plant wisdom, waterless dry powder bases, and zero synthetic fillers. Thank you for caring for your skin and the planet simultaneously.
-                </p>
-              </div>
-
-              <div className="pt-6 border-t border-stone-200 flex justify-end">
-                <button
-                  onClick={() => setActivePost(null)}
-                  className="px-6 py-2.5 rounded-full bg-[#1A331E] text-white font-semibold text-xs hover:bg-[#2D5233]"
-                >
-                  Close Article
-                </button>
-              </div>
-            </div>
-          </motion.div>
+            <span>Explore All Journal Articles</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
-      )}
+
+      </div>
     </section>
   );
 };

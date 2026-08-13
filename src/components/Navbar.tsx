@@ -74,12 +74,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             Home
           </Link>
           
-          <button
-            onClick={onOpenStory}
+          <Link
+            to="/our-story"
             className="transition-colors hover:text-emerald-200 text-white/90"
           >
             About us
-          </button>
+          </Link>
 
           {/* Collection Dropdown */}
           <div
@@ -104,7 +104,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {(['Skin', 'Hair', 'Teeth', 'Body', 'Home', 'Bundles', 'Refills'] as Category[]).map((cat) => (
                   <Link
                     key={cat}
-                    to={`/shop/${cat}`}
+                    to={cat === 'Refills' ? '/refills' : `/shop/${cat}`}
                     onClick={() => {
                       onSelectCategory(cat);
                       setShowCategoryDropdown(false);
@@ -122,18 +122,25 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           <Link
-            to="/shop"
+            to="/ingredients"
             className="transition-colors hover:text-emerald-200 text-white/90"
           >
-            Shop +
+            Ingredients
           </Link>
 
-          <button
-            onClick={onOpenStory}
+          <Link
+            to="/journal"
             className="transition-colors hover:text-emerald-200 text-white/90"
           >
-            Contact
-          </button>
+            Journal
+          </Link>
+
+          <Link
+            to="/refills"
+            className="transition-colors hover:text-emerald-200 text-white/90 font-medium text-emerald-200"
+          >
+            Refills
+          </Link>
         </nav>
 
         {/* Right: Search, Account, Cart Icons & Mobile Toggle */}

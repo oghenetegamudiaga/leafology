@@ -113,22 +113,27 @@ export const Footer: React.FC<FooterProps> = ({
             <h4 className="font-serif text-lg font-bold text-amber-200">About & Wisdom</h4>
             <ul className="space-y-2 text-xs text-white/70">
               <li>
-                <button onClick={onOpenStory} className="hover:text-amber-200 transition-colors">
+                <Link to="/our-story" className="hover:text-amber-200 transition-colors block">
                   Our Naked Story (Founder)
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={onOpenIngredients} className="hover:text-amber-200 transition-colors">
+                <Link to="/ingredients" className="hover:text-amber-200 transition-colors block">
                   Ingredient Glossary
-                </button>
+                </Link>
               </li>
               <li>
-                <button onClick={onOpenQuiz} className="hover:text-amber-200 transition-colors">
+                <Link to="/journal" className="hover:text-amber-200 transition-colors block">
+                  Botanical Journal
+                </Link>
+              </li>
+              <li>
+                <button onClick={onOpenQuiz} className="hover:text-amber-200 transition-colors text-left">
                   Routine Finder Quiz
                 </button>
               </li>
               <li>
-                <Link to="/shop/Refills" className="hover:text-amber-200 transition-colors block">
+                <Link to="/refills" className="hover:text-amber-200 transition-colors block font-semibold text-emerald-300">
                   The Refill System
                 </Link>
               </li>

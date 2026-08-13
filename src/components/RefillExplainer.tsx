@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Leaf, RefreshCw, PackageCheck, Sparkles, ArrowRight } from 'lucide-react';
 
@@ -143,15 +144,13 @@ export const RefillExplainer: React.FC<RefillExplainerProps> = ({ onOpenRefills 
 
         {/* CTA */}
         <div className="text-center pt-4">
-          <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={onOpenRefills}
+          <Link
+            to="/refills"
             className="px-8 py-4 rounded-full bg-[#FAF8F5] text-[#1A331E] font-semibold text-sm hover:bg-white transition-all shadow-xl inline-flex items-center gap-2"
           >
             <span>Explore All Eco Refills</span>
             <ArrowRight className="w-4 h-4 text-[#1A331E]" />
-          </motion.button>
+          </Link>
         </div>
 
       </div>

@@ -10,6 +10,12 @@ import { OrderConfirmationPage } from './pages/OrderConfirmationPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { AccountPage } from './pages/AccountPage';
+import { JournalPage } from './pages/JournalPage';
+import { JournalPostPage } from './pages/JournalPostPage';
+import { IngredientGlossaryPage } from './pages/IngredientGlossaryPage';
+import { IngredientDetailPage } from './pages/IngredientDetailPage';
+import { OurStoryPage } from './pages/OurStoryPage';
+import { RefillsPage } from './pages/RefillsPage';
 
 import { AuthProvider } from './context/AuthContext';
 import { WishlistProvider } from './context/WishlistContext';
@@ -162,6 +168,30 @@ export default function App() {
               <Route
                 path="/account"
                 element={<AccountPage onAddToCart={handleAddToCart} />}
+              />
+              <Route
+                path="/journal"
+                element={<JournalPage />}
+              />
+              <Route
+                path="/journal/:slug"
+                element={<JournalPostPage onAddToCart={handleAddToCart} />}
+              />
+              <Route
+                path="/ingredients"
+                element={<IngredientGlossaryPage />}
+              />
+              <Route
+                path="/ingredients/:slug"
+                element={<IngredientDetailPage onAddToCart={handleAddToCart} />}
+              />
+              <Route
+                path="/our-story"
+                element={<OurStoryPage />}
+              />
+              <Route
+                path="/refills"
+                element={<RefillsPage />}
               />
               <Route
                 path="*"
